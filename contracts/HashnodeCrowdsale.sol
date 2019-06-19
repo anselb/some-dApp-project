@@ -3,8 +3,9 @@ pragma solidity ^0.5.0;
 import './HashnodeToken.sol';
 import 'openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol';
 import 'openzeppelin-solidity/contracts/crowdsale/distribution/RefundableCrowdsale.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
-contract HashnodeCrowdsale is CappedCrowdsale, RefundableCrowdsale {
+contract HashnodeCrowdsale is CappedCrowdsale, RefundableCrowdsale, Ownable {
 
   // ICO Stage
   // ============
@@ -35,7 +36,13 @@ contract HashnodeCrowdsale is CappedCrowdsale, RefundableCrowdsale {
 
   // Constructor
   // ============
-  constructor (uint256 _startTime, uint256 _endTime, uint256 _rate, address _wallet, uint256 _goal, uint256 _cap) CappedCrowdsale(_cap) FinalizableCrowdsale() RefundableCrowdsale(_goal) Crowdsale(_startTime, _endTime, _rate, _wallet) public {
+  constructor (uint256 _startTime, uint256 _endTime, uint256 _rate, address payable _wallet, uint256 _goal, uint256 _cap, IERC20 _token)
+    CappedCrowdsale(_cap)
+    FinalizableCrowdsale()
+    RefundableCrowdsale(_goal)
+    Crowdsale(_rate, _wallet, _token)
+    public
+  {
       require(_goal <= _cap);
   }
   // =============
@@ -70,17 +77,18 @@ contract HashnodeCrowdsale is CappedCrowdsale, RefundableCrowdsale {
       }
   }
 
+  // TODO: rate needs to be solved because it is private in Crowdsale.sol
   // Change the current rate
-  function setCurrentRate(uint256 _rate) private {
-      rate = _rate;
-  }
+  // function setCurrentRate(uint256 _rate) private {
+  //     rate = _rate;
+  // }
 
   // ================ Stage Management Over =====================
 
   // Token Purchase
   // =========================
   function () external payable {
-      uint256 tokensThatWillBeMintedAfterPurchase = msg.value.mul(rate);
+      uint256 tokensThatWillBeMintedAfterPurchase = msg.value.mul(rate());
       if ((stage == CrowdsaleStage.PreICO) && (token.totalSupply() + tokensThatWillBeMintedAfterPurchase > totalTokensForSaleDuringPreICO)) {
         msg.sender.transfer(msg.value); // Refund them
         EthRefunded("PreICO Limit Hit");
@@ -110,7 +118,7 @@ contract HashnodeCrowdsale is CappedCrowdsale, RefundableCrowdsale {
 
   function finish(address _teamFund, address _ecosystemFund, address _bountyFund) public onlyOwner() {
 
-      require(!isFinalized);
+      require(!finalized());
       uint256 alreadyMinted = token.totalSupply();
       require(alreadyMinted < maxTokens);
 
