@@ -9,12 +9,15 @@ contract BlockchainMe is Ownable {
 
   event NewData(uint dataId, string data);
 
+  // Set fee equal to around 5 USD at time of app creation
+  uint blockchainMeFee = 0.017 ether;
   string[] public dataStore;
 
   mapping (uint => address) public dataToOwner;
   mapping (address => uint) ownerDataCount;
 
-  function storeData(string _data) internal {
+  function storeData(string calldata _data) external payable {
+    require(msg.value == blockchainMeFee);
     uint id = dataStore.push(_data) - 1;
     dataToOwner[id] = msg.sender;
     ownerDataCount[msg.sender] = ownerDataCount[msg.sender].add(1);
