@@ -13,12 +13,17 @@ contract BlockchainMe is Ownable {
 
   /// @notice The current fee is equal to around 5 USD at time of app creation
   uint blockchainMeFee = 0.017 ether;
+
+  /// @notice The structure where all data is actually stored
   string[] public dataStore;
 
+  /// @notice This map indicates who owns what data at the specified index in the dataStore
   mapping (uint => address) public dataToOwner;
+
+  /// @notice This map indicates how much data each owner owns
   mapping (address => uint) ownerDataCount;
 
-  /// @notice The main function of the app
+  /// @notice The main function of BlockchainMe
   /// @param _data The string that will be stored in the dataStore array
   /// @dev The id for each piece of data is indexed by 0
   /// @notice In addition to gas fees, this app also require a "service" fee
