@@ -1,0 +1,26 @@
+{
+  "name": "some-dapp-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "openzeppelin-solidity": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anselb/some-dApp-project.git"
+  },
+  "author": "Ansel <iamansel@gmail.com> (https://github.com/anselb)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anselb/some-dApp-project/issues"
+  },
+  "homepage": "https://github.com/anselb/some-dApp-project#readme"
+}
