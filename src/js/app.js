@@ -73,9 +73,10 @@ App = {
         if (data) {
           dataList.empty()
           for (i = 0; i < data.length; i ++) {
+            let dataId = data[i]
             blockchainMeInstance.dataStore(data[i]).then((dataFromStore) => {
               dataTemplate.find('.btn-update').text(dataFromStore);
-              dataTemplate.find('.btn-update').attr('data-id', data[i]);
+              dataTemplate.find('.btn-update').attr('data-id', dataId);
 
               dataList.append(dataTemplate.html());
             })
